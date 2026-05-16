@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.GameVault" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/surface_background</item>
+        <item name="android:navigationBarColor">@color/surface_background</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/highlight</item>
+        <item name="android:colorAccent">@color/primary</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 
-    <style name="Theme.GameVault" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.GameVault" parent="Base.Theme.GameVault" />
 </resources>

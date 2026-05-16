@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">GameVault</string>
+    <string name="tagline">Tu biblioteca de videojuegos</string>
+    <string name="login_email">Email</string>
+    <string name="email_placeholder">tucorreo@email.com</string>
+    <string name="password">Contraseña</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_action">Ingresar</string>
+    <string name="go_to_register">¿No tienes cuenta? Regístrate</string>
+    <string name="create_account">Crear cuenta</string>
+    <string name="register_subtitle">Únete y empieza a explorar miles de juegos</string>
+    <string name="register_action">Registrarse</string>
+    <string name="go_to_login">¿Ya tienes cuenta? Iniciar sesión</string>
+    <string name="personal_data_title">Datos personales</string>
+    <string name="personal_step">Paso 2 de 2 · Casi listo, gamer</string>
+    <string name="personal_intro">Cuéntanos un poco sobre ti</string>
+    <string name="first_name">Nombre(s)</string>
+    <string name="first_name_hint">Diego</string>
+    <string name="last_name">Apellidos</string>
+    <string name="last_name_hint">Hernández Soto</string>
+    <string name="phone">Número de celular</string>
+    <string name="phone_hint">+52 55 9876 5432</string>
+    <string name="birth_date">Fecha de nacimiento</string>
+    <string name="birth_date_hint">22 / 08 / 1998</string>
+    <string name="calendar_helper">Toca para abrir el calendario</string>
+    <string name="continue_action">Empezar a explorar</string>
 </resources>
