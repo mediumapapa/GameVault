@@ -7,11 +7,16 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.gamevault.R
 import com.example.gamevault.core.FragmentCommunicator
+import com.example.gamevault.core.ResponseService
 import com.example.gamevault.databinding.FragmentLoginBinding
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
@@ -28,6 +33,7 @@ class LoginFragment : Fragment() {
         communicator = requireActivity() as FragmentCommunicator
         setupValidation()
         setupClickListeners()
+        observeState()
         return binding.root
     }
 
@@ -48,13 +54,47 @@ class LoginFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.btnLogin.setOnClickListener {
-            Snackbar.make(binding.root, "Login despues", Snackbar.LENGTH_SHORT).show()
+            val email = binding.emailTiet.text.toString().trim()
+            val password = binding.passwordTiet.text.toString().trim()
+            viewModel.requestLogin(email, password)
         }
         binding.tvForgotPassword.setOnClickListener {
             Snackbar.make(binding.root, "Recuperacion de contrasena", Snackbar.LENGTH_SHORT).show()
         }
         binding.tvGoToRegister.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+        }
+    }
+
+    private fun observeState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.signInState.collect { state ->
+                    when (state) {
+                        is ResponseService.Loading -> {
+                            communicator.manageLoader(true)
+                            binding.btnLogin.isEnabled = false
+                        }
+                        is ResponseService.Success -> {
+                            communicator.manageLoader(false)
+                            Snackbar.make(
+                                binding.root,
+                                "Inicio de sesion correcto",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                            viewModel.clearSignInState()
+                            validateAndEnable()
+                        }
+                        is ResponseService.Error -> {
+                            communicator.manageLoader(false)
+                            Snackbar.make(binding.root, state.error, Snackbar.LENGTH_LONG).show()
+                            viewModel.clearSignInState()
+                            validateAndEnable()
+                        }
+                        null -> Unit
+                    }
+                }
+            }
         }
     }
 

@@ -8,10 +8,16 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.gamevault.core.FragmentCommunicator
+import com.example.gamevault.core.ResponseService
 import com.example.gamevault.databinding.FragmentPersonalInfoBinding
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class PersonalInfoFragment : Fragment() {
@@ -30,6 +36,7 @@ class PersonalInfoFragment : Fragment() {
         setupValidation()
         setupDatePicker()
         setupClickListeners()
+        observeState()
         return binding.root
     }
 
@@ -85,7 +92,51 @@ class PersonalInfoFragment : Fragment() {
             findNavController().navigateUp()
         }
         binding.btnContinuar.setOnClickListener {
-            Snackbar.make(binding.root, "Guardado TODO", Snackbar.LENGTH_SHORT).show()
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+            if (uid == null) {
+                Snackbar.make(binding.root, "Sesion invalida", Snackbar.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            viewModel.saveProfile(
+                uid = uid,
+                nombre = binding.nombreTiet.text.toString().trim(),
+                apellidos = binding.apellidosTiet.text.toString().trim(),
+                celular = binding.celularTiet.text.toString().trim(),
+                fechaNacimiento = binding.fechaNacimientoTiet.text.toString().trim()
+            )
+        }
+    }
+
+    private fun observeState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.saveState.collect { state ->
+                    when (state) {
+                        is ResponseService.Loading -> {
+                            communicator.manageLoader(true)
+                            binding.btnContinuar.isEnabled = false
+                        }
+                        is ResponseService.Success -> {
+                            communicator.manageLoader(false)
+                            Snackbar.make(
+                                binding.root,
+                                "Perfil guardado correctamente",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                            viewModel.clearSaveState()
+                            validateAndEnable()
+                        }
+                        is ResponseService.Error -> {
+                            communicator.manageLoader(false)
+                            Snackbar.make(binding.root, state.error, Snackbar.LENGTH_LONG).show()
+                            viewModel.clearSaveState()
+                            validateAndEnable()
+                        }
+                        null -> Unit
+                    }
+                }
+            }
         }
     }
 

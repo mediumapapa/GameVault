@@ -7,10 +7,16 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.gamevault.R
 import com.example.gamevault.core.FragmentCommunicator
+import com.example.gamevault.core.ResponseService
 import com.example.gamevault.databinding.FragmentRegisterBinding
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 
 class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null
@@ -27,6 +33,7 @@ class RegisterFragment : Fragment() {
         communicator = requireActivity() as FragmentCommunicator
         setupValidation()
         setupClickListeners()
+        observeState()
         return binding.root
     }
 
@@ -53,10 +60,40 @@ class RegisterFragment : Fragment() {
             findNavController().navigateUp()
         }
         binding.btnRegister.setOnClickListener {
-            findNavController().navigate(R.id.action_registerFragment_to_personalInfoFragment)
+            val email = binding.emailTiet.text.toString().trim()
+            val password = binding.passwordTiet.text.toString().trim()
+            viewModel.requestSignUp(email, password)
         }
         binding.tvGoToLogin.setOnClickListener {
             findNavController().navigateUp()
+        }
+    }
+
+    private fun observeState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.registerState.collect { state ->
+                    when (state) {
+                        is ResponseService.Loading -> {
+                            communicator.manageLoader(true)
+                            binding.btnRegister.isEnabled = false
+                        }
+                        is ResponseService.Success -> {
+                            communicator.manageLoader(false)
+                            viewModel.clearRegisterState()
+                            findNavController()
+                                .navigate(R.id.action_registerFragment_to_personalInfoFragment)
+                        }
+                        is ResponseService.Error -> {
+                            communicator.manageLoader(false)
+                            Snackbar.make(binding.root, state.error, Snackbar.LENGTH_LONG).show()
+                            viewModel.clearRegisterState()
+                            validateAndEnable()
+                        }
+                        null -> Unit
+                    }
+                }
+            }
         }
     }
 
