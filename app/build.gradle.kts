@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.gamevault"
+        applicationId = "com.mediumapapa.gamevault"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

@@ -62,7 +62,6 @@
             style="@style/GameVaultInputEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/email_placeholder"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -85,7 +84,6 @@
             style="@style/GameVaultInputEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="••••••••"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
