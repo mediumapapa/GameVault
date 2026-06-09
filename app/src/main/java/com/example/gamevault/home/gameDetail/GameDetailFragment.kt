@@ -45,9 +45,48 @@ class GameDetailFragment : Fragment() {
         gameId = arguments?.getInt("gameId") ?: 0
 
         binding.btnBack.setOnClickListener { findNavController().popBackStack() }
+        binding.btnWishToggle.setOnClickListener { toggleFavorite() }
+        binding.btnAddToWishlist.setOnClickListener { toggleFavorite() }
 
         observeDetail()
+        observeFavorite()
         viewModel.loadDetail(gameId)
+    }
+
+    private fun toggleFavorite() {
+        val detail = currentDetail
+        if (detail == null) {
+            Snackbar.make(binding.root, "Espera a que cargue el juego", Snackbar.LENGTH_SHORT).show()
+            return
+        }
+        viewModel.toggleFavorite(detail)
+    }
+
+    private fun observeFavorite() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isFavorite.collect { isFavorite -> renderFavorite(isFavorite) }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.favoriteMessage.collect { message ->
+                    if (message != null) {
+                        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+                        viewModel.consumeMessage()
+                    }
+                }
+            }
+        }
+    }
+
+    /** Refleja el estado del favorito en el corazón y el botón inferior. */
+    private fun renderFavorite(isFavorite: Boolean) {
+        val heart = if (isFavorite) R.drawable.ic_heart_filled else R.drawable.ic_heart_outline
+        binding.btnWishToggle.setImageResource(heart)
+        binding.btnAddToWishlist.setIconResource(heart)
+        binding.btnAddToWishlist.text =
+            getString(if (isFavorite) R.string.detail_remove else R.string.detail_add)
     }
 
     private fun observeDetail() {
