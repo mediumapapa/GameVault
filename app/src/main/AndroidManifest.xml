@@ -16,8 +16,16 @@
         android:theme="@style/Theme.GameVault"
         tools:targetApi="31">
 
-        <!-- Las Activities (onboarding.MainActivity y home.HomeActivity) se
-             declaran en sus respectivas funcionalidades. -->
+        <activity
+            android:name=".onboarding.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- home.HomeActivity se declara en la funcionalidad de catálogo. -->
 
     </application>
 
