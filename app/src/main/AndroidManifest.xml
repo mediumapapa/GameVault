@@ -25,7 +25,9 @@
             </intent-filter>
         </activity>
 
-        <!-- home.HomeActivity se declara en la funcionalidad de catálogo. -->
+        <activity
+            android:name=".home.HomeActivity"
+            android:exported="false" />
 
     </application>
 
