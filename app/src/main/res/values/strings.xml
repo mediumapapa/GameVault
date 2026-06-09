@@ -32,6 +32,7 @@
     <string name="home_section">Tendencia ahora</string>
     <string name="home_section_subtitle">Los juegos más populares de la semana</string>
     <string name="home_empty">No encontramos juegos con ese nombre</string>
+    <string name="rating_format">★ %.1f</string>
 
     <!-- Detalle -->
     <string name="detail_about">Acerca del juego</string>
@@ -40,6 +41,9 @@
     <string name="detail_playtime">PLAYTIME PROMEDIO</string>
     <string name="detail_add">Agregar a mi lista</string>
     <string name="detail_remove">Quitar de mi lista</string>
+    <string name="detail_score_format">%1$.1f (%2$d)</string>
+    <string name="detail_metacritic_format">%d Meta</string>
+    <string name="detail_playtime_format">~ %d horas</string>
 
     <!-- Favoritos -->
     <string name="favorites_title">Mi lista</string>
