@@ -32,6 +32,7 @@
     <string name="home_section">Tendencia ahora</string>
     <string name="home_section_subtitle">Los juegos más populares de la semana</string>
     <string name="home_empty">No encontramos juegos con ese nombre</string>
+    <string name="rating_format">★ %.1f</string>
 
     <!-- Detalle -->
     <string name="detail_about">Acerca del juego</string>
