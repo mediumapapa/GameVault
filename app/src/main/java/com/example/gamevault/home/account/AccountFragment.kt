@@ -9,9 +9,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import android.content.Intent
+import com.example.gamevault.R
 import com.example.gamevault.core.ResponseService
 import com.example.gamevault.databinding.FragmentAccountBinding
+import com.example.gamevault.onboarding.MainActivity
 import com.example.gamevault.onboarding.personal.model.UserProfile
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
@@ -32,8 +36,42 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.btnCerrarSesion.setOnClickListener { confirmLogout() }
+        binding.btnConfiguracion.setOnClickListener {
+            Snackbar.make(binding.root, "Configuración próximamente", Snackbar.LENGTH_SHORT).show()
+        }
+
         observeProfile()
+        observeStats()
         viewModel.loadProfile()
+        viewModel.loadStats()
+    }
+
+    private fun observeStats() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.favoritesCount.collect { count ->
+                    binding.tvStatsCount.text =
+                        resources.getQuantityString(R.plurals.account_stats_count, count, count)
+                }
+            }
+        }
+    }
+
+    private fun confirmLogout() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Cerrar sesión")
+            .setMessage("¿Seguro que quieres salir?")
+            .setNegativeButton("Cancelar", null)
+            .setPositiveButton("Cerrar sesión") { _, _ ->
+                viewModel.logout()
+                val intent = Intent(requireContext(), MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                requireActivity().finish()
+            }
+            .show()
     }
 
     private fun observeProfile() {

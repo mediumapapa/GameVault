@@ -59,6 +59,12 @@
         <item quantity="other">%d juegos guardados</item>
     </plurals>
 
+    <plurals name="account_stats_count">
+        <item quantity="zero">Sin títulos guardados</item>
+        <item quantity="one">%d título guardado</item>
+        <item quantity="other">%d títulos guardados</item>
+    </plurals>
+
     <!-- Cuenta -->
     <string name="account_title">Mi cuenta</string>
     <string name="account_stats_label">Juegos en mi lista</string>
