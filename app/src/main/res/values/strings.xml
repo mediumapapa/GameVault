@@ -51,6 +51,13 @@
     <string name="favorites_empty_title">Aún no tienes juegos guardados</string>
     <string name="favorites_empty_subtitle">Explora el catálogo y agrega tus juegos favoritos a esta lista.</string>
     <string name="favorites_explore">Explorar juegos</string>
+    <string name="favorite_meta_format">★ %1$.1f · %2$s</string>
+
+    <plurals name="favorites_count">
+        <item quantity="zero">Sin juegos guardados</item>
+        <item quantity="one">%d juego guardado</item>
+        <item quantity="other">%d juegos guardados</item>
+    </plurals>
 
     <!-- Cuenta -->
     <string name="account_title">Mi cuenta</string>
